@@ -1,0 +1,35 @@
+{
+    "license": "MIT",
+    "name": "ndobromirov/php-slack-inviter",
+    "description": "This is a library used to ease slack invitations sending from PHP.",
+    "keywords": ["client", "web service", "slack", "invites"],
+    "authors": [
+        {
+            "name": "Nikolay Dobromirov",
+            "email": "ndobromirov@gmail.com",
+            "homepage": "https://github.com/ndobromirov"
+        }
+    ],
+    "require": {
+        "php": ">=5",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.0",
+        "squizlabs/php_codesniffer": "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpSlackInviter\\": "src/"
+        }
+    },
+    "autoload-dev":{
+        "psr-4":{
+            "PhpSlackInviter\\": "tests/"
+        }
+    },
+    "scripts": {
+        "cs": "phpcs --standard=PSR2 -n src tests",
+        "test": "phpunit"
+    }
+}

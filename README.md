@@ -1,9 +1,10 @@
 # php-slack-inviter
 Library to ease programmatic invites sending.
 
+[![License](https://poser.pugx.org/ndobromirov/php-slack-inviter/license)](https://packagist.org/packages/ndobromirov/php-slack-inviter)
 [![Latest Stable Version](https://poser.pugx.org/ndobromirov/php-slack-inviter/version)](https://packagist.org/packages/ndobromirov/php-slack-inviter)
 [![Build Status](https://api.travis-ci.org/ndobromirov/php-slack-inviter.svg?branch=master)](https://travis-ci.org/ndobromirov/php-slack-inviter)
-[![License](https://poser.pugx.org/ndobromirov/php-slack-inviter/license)](https://packagist.org/packages/ndobromirov/php-slack-inviter)
+[![Coverage Status](https://coveralls.io/repos/github/ndobromirov/php-slack-inviter/badge.svg?branch=master)](https://coveralls.io/github/ndobromirov/php-slack-inviter?branch=master)
 
 # Requirements
 1. Create a Slack team or join one.

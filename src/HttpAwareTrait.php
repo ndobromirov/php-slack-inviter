@@ -12,6 +12,8 @@ use GuzzleHttp\Client;
 /**
  * Utility trait to handle the HTTP communications.
  *
+ * This will ease up mocking of the http client instance during testing.
+ *
  * @author ndobromirov
  */
 trait HttpAwareTrait

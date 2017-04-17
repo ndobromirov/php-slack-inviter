@@ -55,6 +55,14 @@ class InviteHandler
         ]);
     }
 
+    /**
+     * Requests an inveto for a given email.
+     *
+     * @param string $email Email to send the invite to.
+     * @return bool True on success.
+     *
+     * @throws Exception On any error (HTTP or Slack related).
+     */
     public function requestNewInvite($email)
     {
         try {
@@ -70,21 +78,26 @@ class InviteHandler
 
             $result = json_decode($response->getBody()->getContents());
         } catch (\Exception $e) {
-            // There was some kind of error in communication with Slack...
+            $result = null;
+        }
+
+        // Empty request body or any exception.
+        if (empty($result)) {
             $result = (object) ['ok' => false, 'error' => 'http'];
         }
 
         if (!$result->ok) {
-            throw new Exception($this->mapError($this->error));
+            throw new Exception($this->mapError($result->error));
         }
 
         return true;
     }
 
-    private function mapError($code) {
+    private function mapError($code)
+    {
         $map = [
             // Our custom ones.
-            'http' => 'There was an issue in communication with Slack\'s API!',
+            'http' => 'There was an issue in communication with Slack!',
             'unknown_error' => "Unknown error forom Slack API: $code!",
 
             // Slack errors.
@@ -92,10 +105,9 @@ class InviteHandler
             'already_invited' => 'An invitation was already sent to your email!',
             'already_in_team' => 'You are already part of the team!',
             'user_disabled' => 'Your account has been disabled!',
-            'invalid_email' => 'Slack considers your email invalid.'
+            'invalid_email' => 'Slack considers your email invalid.',
         ];
 
         return $map[isset($map[$code]) ? $code : 'unknown_error'];
     }
-
 }

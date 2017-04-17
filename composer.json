@@ -30,6 +30,8 @@
     },
     "scripts": {
         "cs": "phpcs --standard=PSR2 -n src tests",
-        "test": "phpunit"
+        "test": "phpunit",
+        "test-all": "composer test && composer cs",
+        "test-failing": "phpunit --group failing"
     }
 }

@@ -9,10 +9,10 @@ Library to ease programmatic invites sending.
 # Requirements
 1. Create a Slack team or join one.
 
-2. Slack a personal access token for the particular team.
+2. Aquire a personal access token for a particular team you are part of.
 Go to [this page](https://api.slack.com/custom-integrations/legacy-tokens) and
-generate your access token for a particular team you are part of. invitations
-will originate the access token's owner.
+generate your access token. Invitations will originate from the access token's
+owner.
 
 # Installation
 ```
@@ -20,7 +20,7 @@ composer require ndobromirov/php-slack-inviter
 ```
 
 # Usage example
-```
+```php
 require __DIR__ . '/vendor/autoload.php';
 
 $team = 'my-team-name'

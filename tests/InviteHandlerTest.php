@@ -34,6 +34,12 @@ class InviteHandlerTest extends \PHPUnit_Framework_TestCase
         ]));
     }
 
+    public function testCreation()
+    {
+        $handler = new InviteHandler('slack-token-value', 'slak-team-name');
+        $this->assertTrue($handler->getClient() instanceof Client);
+    }
+
     public function testSuccessfulInvite()
     {
         $handler = $this->createHandler([

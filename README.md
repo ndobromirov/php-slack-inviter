@@ -24,14 +24,14 @@ composer require ndobromirov/php-slack-inviter
 ```php
 require __DIR__ . '/vendor/autoload.php';
 
-$team = 'my-team-name'
+$team = 'my-team-name';
 $token = 'my-token-value';
 
 $handler = new \PhpSlackInviter\InviteHandler($token, $team);
 
 try {
     $handler->requestNewInvite('email@example.com');
-    echo 'Invitation was sent!'
+    echo 'Invitation was sent!';
 }
 catch (\PhpSlackInviter\Exception $e) {
     echo $e->getMessage();

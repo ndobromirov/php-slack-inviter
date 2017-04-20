@@ -47,6 +47,7 @@ trait HttpAwareTrait
      * Mutator to the HTTP client instance.
      *
      * @param Client $client New client to use for testing.
+     * @return static The current class instance. Allows chaining.
      */
     public function setClient(Client $client)
     {

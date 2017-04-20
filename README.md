@@ -1,10 +1,11 @@
 # php-slack-inviter
 Library to ease programmatic invites sending.
 
-[![License](https://poser.pugx.org/ndobromirov/php-slack-inviter/license)](https://packagist.org/packages/ndobromirov/php-slack-inviter)
-[![Latest Stable Version](https://poser.pugx.org/ndobromirov/php-slack-inviter/version)](https://packagist.org/packages/ndobromirov/php-slack-inviter)
 [![Build Status](https://api.travis-ci.org/ndobromirov/php-slack-inviter.svg?branch=master)](https://travis-ci.org/ndobromirov/php-slack-inviter)
 [![Coverage Status](https://coveralls.io/repos/github/ndobromirov/php-slack-inviter/badge.svg?branch=master)](https://coveralls.io/github/ndobromirov/php-slack-inviter?branch=master)
+
+[![Latest Stable Version](https://poser.pugx.org/ndobromirov/php-slack-inviter/version)](https://packagist.org/packages/ndobromirov/php-slack-inviter)
+[![License](https://poser.pugx.org/ndobromirov/php-slack-inviter/license)](https://packagist.org/packages/ndobromirov/php-slack-inviter)
 
 # Requirements
 1. Create a Slack team or join one.
@@ -36,3 +37,13 @@ catch (\PhpSlackInviter\Exception $e) {
     echo $e->getMessage();
 }
 ```
+
+# Contributing
+ - Fork the repository and checkout the master branch locally.
+ - Run all tests (unit and coding standards) with: `composer test-all`.
+ - Any changes to the library should be covered by unit-tests.
+   Run unit tests with `composer test` from project's root folder.
+ - The library is PSR-2 compliant. Validate coding standards by running the
+   command `composer cs` from the project's root folder.
+ - Report any issues in the
+   [tracker](https://github.com/ndobromirov/php-slack-inviter/issues).

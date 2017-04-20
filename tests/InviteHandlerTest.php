@@ -1,9 +1,8 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @file
+ * Testing file for the InviteHandler class.
  */
 
 namespace PhpSlackInviter;
@@ -16,37 +15,65 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\json_encode;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
+use PHPUnit_Framework_TestCase;
 
 /**
- * Description of InviteTest
- *
- * @todo Improve test coverage for negative cases.
+ * InviteHandlerTest.
  *
  * @author ndobromirov
  */
-class InviteHandlerTest extends \PHPUnit_Framework_TestCase
+class InviteHandlerTest extends PHPUnit_Framework_TestCase
 {
-    private function createHandler(array $responses = [])
+    /** @var string */
+    private $team;
+
+    /** @var string */
+    private $token;
+
+    /** @var string */
+    private $email;
+
+    /**
+     * @inheritdoc
+     */
+    protected function setUp()
     {
-        $handler = new InviteHandler('slack-token-value', 'slak-team-name');
-        return $handler->setClient(new Client([
-            'handler' => HandlerStack::create(new MockHandler($responses)),
-        ]));
+        $this->team = 'slack-team-name';
+        $this->token = 'slack-token-value';
+        $this->email = 'email@example.com';
+    }
+
+    /**
+     * Utility factory for InviteHandler instances with a mocked responses.
+     *
+     * @param array $responses Ordered oist of Slack API responses.
+     * @return InviteHandler The newly created instance.
+     */
+    private function createMockHandler(array $responses = [])
+    {
+        $mock = new MockHandler($responses);
+        $stack = HandlerStack::create($mock);
+        $http = new Client(['handler' => $stack]);
+
+        $handler = new InviteHandler($this->token, $this->team);
+        $handler->setClient($http);
+
+        return $handler;
     }
 
     public function testCreation()
     {
-        $handler = new InviteHandler('slack-token-value', 'slak-team-name');
+        $handler = new InviteHandler($this->token, $this->team);
         $this->assertTrue($handler->getClient() instanceof Client);
     }
 
     public function testSuccessfulInvite()
     {
-        $handler = $this->createHandler([
+        $handler = $this->createMockHandler([
             new Response(200, [], json_encode(['ok' => true])),
         ]);
 
-        $this->assertTrue($handler->requestNewInvite('email@example.com'));
+        $this->assertTrue($handler->requestNewInvite($this->email));
     }
 
     /**
@@ -57,18 +84,22 @@ class InviteHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSlackError($code, $message)
     {
-        $handler = $this->createHandler([
-            new Response(200, [], json_encode(['ok' => false, 'error' => $code])),
-        ]);
+        $body = json_encode(['ok' => false, 'error' => $code]);
+        $response = new Response(200, [], $body);
+        $handler = $this->createMockHandler([$response]);
 
-        try {
-            $handler->requestNewInvite('email@example.com');
-            $this->assertTrue(false);
-        } catch (Exception $e) {
-            $this->assertEquals($message, $e->getMessage());
-        }
+        $this->assertExceptionMessage($message, function () use ($handler) {
+            $handler->requestNewInvite($this->email);
+        });
     }
 
+    /**
+     * Data provider utility.
+     *
+     * @see InviteHandlerTest::testSlackError()
+     *
+     * @return array List of input data.
+     */
     public function slackErrors()
     {
         return [
@@ -88,23 +119,45 @@ class InviteHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHttpErrors($response)
     {
-        $handler = $this->createHandler([$response]);
+        $handler = $this->createMockHandler([$response]);
 
-        try {
-            $handler->requestNewInvite('email@example.com');
-        } catch (Exception $e) {
-            $this->assertEquals('There was an issue in communication with Slack!', $e->getMessage());
-        }
+        $message = 'There was an issue in communication with Slack!';
+        $this->assertExceptionMessage($message, function () use ($handler) {
+            $handler->requestNewInvite($this->email);
+        });
     }
 
+    /**
+     * Invalid slack responces data provider.
+     *
+     * @see InviteHandlerTest::testHttpErrors()
+     *
+     * @return array List of problematic responses to use.
+     */
     public function invalidSlackResponses()
     {
         return [
             [new Response(200, [], '')],
             [new Response(200, [], '{')],
             [new Response(500, [], '')],
-            [new ServerException('Server offline', new Request('POST', 'fake'))],
-            [new RequestException('Can not connect to slack server.', new Request('POST', 'fake'))],
+            [new ServerException('Offline', new Request('POST', '-'))],
+            [new RequestException('No connection!', new Request('POST', '-'))],
         ];
+    }
+
+    /**
+     * Utility assert cb.
+     *
+     * @param string $message The expected exception message.
+     * @param callable $callback No parameters callback throwing an exception.
+     */
+    public function assertExceptionMessage($message, $callback)
+    {
+        try {
+            call_user_func($callback);
+            $this->assertTrue(false);
+        } catch (Exception $e) {
+            $this->assertEquals($message, $e->getMessage());
+        }
     }
 }
